@@ -1,5 +1,4 @@
-package concurrent.asyn;
-
+package concurrent.lang;
 /**
  * @Description TODO
  * @Date 2018/9/24 下午1:10
@@ -119,8 +118,8 @@ public class ThreadLocal<T> {
      * @throws NullPointerException if the specified supplier is null
      * @since 1.8
      */
-    public static <S> java.lang.ThreadLocal<S> withInitial(Supplier<? extends S> supplier) {
-        return new java.lang.ThreadLocal.SuppliedThreadLocal<>(supplier);
+    public static <S> ThreadLocal<S> withInitial(Supplier<? extends S> supplier) {
+        return new SuppliedThreadLocal<>(supplier);
     }
 
     /**
@@ -136,32 +135,68 @@ public class ThreadLocal<T> {
      * current thread, it is first initialized to the value returned
      * by an invocation of the {@link #initialValue} method.
      *
+     * <p></p>
+     * 返回调用对象(ThreadLocal)中的当前线程对应的副本值，
+     * 如果为null通过调用setInitialValue()方法设初始值并返回
+     *
      * @return the current thread's value of this thread-local
      */
     public T get() {
+        /**
+         * 1.首先获取当前线程
+         */
         Thread t = Thread.currentThread();
+
+        /**
+         * 2.根据当前线程获取map;
+         */
         ThreadLocalMap map = getMap(t);
+        /**
+         * 3.以ThreadLocal的引用作为key来在Map中获取对应的value e，否则转到5;
+         * fixme 在某个线程中第一次调用ThreadLocal对象的get()方法时，map一定为null
+         */
         if (map != null) {
             ThreadLocalMap.Entry e = map.getEntry(this);
+            /**
+             * 4.如果e不为null，则返回e.value
+             */
             if (e != null) {
                 @SuppressWarnings("unchecked")
                 T result = (T)e.value;
                 return result;
             }
         }
+        /**
+         * 5.Map为空或者e为空，则通过initialValue函数获取初始值value.
+         */
         return setInitialValue();
     }
 
     /**
      * Variant of set() to establish initialValue. Used instead
      * of set() in case user has overridden the set() method.
+     * <p></p>
+     * 建立初始值的set()方法的变体，不是用set()方法是因为set()方法可能被重写
      *
-     * @return the initial value
+     * @return the initial value 返回初始值
      */
     private T setInitialValue() {
+        /**
+         * initialValue() 默认返回null，是创建ThreadLocal对象的时候需要重写的方法
+         */
         T value = initialValue();
+        /**
+         * 获取当前线程的实例变量(此实例变量只在jdk此类的createMap()方法中被写)
+         *    ThreadLocal.ThreadLocalMap threadLocals = null;
+         *    return t.threadLocals;
+         */
         Thread t = Thread.currentThread();
         ThreadLocalMap map = getMap(t);
+        /**
+         * 如果当前线程的类变量 ThreadLocal.ThreadLocalMap
+         *      不为null，则设置key对应的value：key-当前ThreadLocal对象；value-初始值(某变量副本);
+         *      如果为null，则为此线程变量设置初值：key和value同上： t.threadLocals = new ThreadLocalMap(this, firstValue);
+         */
         if (map != null)
             map.set(this, value);
         else
@@ -218,9 +253,11 @@ public class ThreadLocal<T> {
     /**
      * Create the map associated with a ThreadLocal. Overridden in
      * InheritableThreadLocal.
+     *  <p></p>
+     *  创建与当前ThreadLocal对象关联的ThreawdLocalMap对象，在InheritableThreadLocal中被重写
      *
-     * @param t the current thread
-     * @param firstValue value for the initial entry of the map
+     * @param t the current thread 当前对象
+     * @param firstValue value for the initial entry of the map。map中存放的初始值
      */
     void createMap(Thread t, T firstValue) {
         t.threadLocals = new ThreadLocalMap(this, firstValue);
@@ -253,7 +290,7 @@ public class ThreadLocal<T> {
      * An extension of ThreadLocal that obtains its initial value from
      * the specified {@code Supplier}.
      */
-    static final class SuppliedThreadLocal<T> extends java.lang.ThreadLocal<T> {
+    static final class SuppliedThreadLocal<T> extends ThreadLocal<T> {
 
         private final Supplier<? extends T> supplier;
 
