@@ -9,4 +9,13 @@
     <version>1.0-SNAPSHOT</version>
 
 
+    <!--除了jdk源码，还要看aviator-->
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.googlecode.aviator/aviator -->
+        <dependency>
+            <groupId>com.googlecode.aviator</groupId>
+            <artifactId>aviator</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+    </dependencies>
 </project>

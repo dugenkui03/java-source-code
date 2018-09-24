@@ -93,6 +93,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
 
     /** The thread running the callable; CASed during run() */
     /**运行构造参数中callable的线程：具体业务逻辑所在。在run()方法中通过CAS操作写入**/
+    //实例变量，指向执行此任务的线程
     private volatile Thread runner;
 
     /** The result to return or exception to throw from get() */
