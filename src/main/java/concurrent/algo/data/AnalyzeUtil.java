@@ -48,6 +48,8 @@ public class AnalyzeUtil {
 
 
     public static void main(String[] args) {
+        //将数据放进cache
+        for (String uuid:uuidList) { uuid.trim();}
 
         ArrayList<Integer> holderX=new ArrayList<>();
         long t1=System.currentTimeMillis();
@@ -55,16 +57,12 @@ public class AnalyzeUtil {
         for (String uuid:uuidList) {
             holderX.add(cache.get(uuid));
         }
-
-        ArrayList<Integer> holderY=new ArrayList<>();
         long t2=System.currentTimeMillis();
-        //直接计算
-        for (String uuid:uuidList) {
-            holderY.add(murmurHash(uuid));
-        }
-        long t3=System.currentTimeMillis();
 
-        System.out.println(holderX.size()==holderY.size());
-        System.out.println("缓存和直接计算性能比\t"+(t2-t1)+":"+(t3-t2));
+//        System.out.println("没有局部性时，查询缓存速度\t"+(t2-t1));
+        //13 11 12 15 15  14 13 12 16 15
+
+        System.out.println("有局部性时，查询缓存速度\t"+(t2-t1));
+        //9 9 12 10 9  9 11 12 9 12
     }
 }
