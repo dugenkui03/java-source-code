@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
  **/
 
 public class SourceHashBalanceTest {
+
     /**
      * 获取uuid数据集合
      */
