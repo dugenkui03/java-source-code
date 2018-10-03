@@ -62,4 +62,9 @@ public class AsyncCache<K,V> implements Cache<K,V> {
     public long size() {
         return underlying.size();
     }
+
+    @Override
+    public void clear() {
+
+    }
 }

@@ -44,6 +44,11 @@ public class ThreadLocalCache<K,V> implements Cache<K,V> {
         return store.get().size();
     }
 
+    @Override
+    public void clear() {
+
+    }
+
     /**
      * 设置缓存值
      */
