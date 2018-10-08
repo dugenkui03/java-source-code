@@ -140,10 +140,16 @@ public class Semaphore implements java.io.Serializable {
     abstract static class Sync extends AbstractQueuedSynchronizer {
         private static final long serialVersionUID = 1192457210091910933L;
 
+        /**
+         * init：总许可数量
+         */
         Sync(int permits) {
             setState(permits);
         }
 
+        /**
+         * 当前许可数量
+         */
         final int getPermits() {
             return getState();
         }
@@ -214,13 +220,30 @@ public class Semaphore implements java.io.Serializable {
             super(permits);
         }
 
+        /**
+         * 公平锁：尝试在共享模式下获取许可，成功则返回当前剩余许可，更新失败则返回-1，更新失败的原因可能有：
+         *      1.使用公平锁，此线程在wait queue中有有效的前置节点；
+         *      2.
+         */
+        @Override
         protected int tryAcquireShared(int acquires) {
             for (;;) {
-                if (hasQueuedPredecessors())
+                /**
+                 * 共享模式获取许可：hasQueuedPredecessors()如果当前线程前边有入队AQS等待获取许可的线程，则返回-1，表示获取失败
+                 */
+                if (hasQueuedPredecessors()){
                     return -1;
+                }
+                /**
+                 * 获取当前可获取的许可数量、减去此次操作需要的许可数量后的剩余许可数量
+                 */
                 int available = getState();
                 int remaining = available - acquires;
-                if (remaining < 0 ||
+                /**
+                 * 如果剩余许可数量小于0，则返回当前剩余许可数量 fixme 此时是走不到第二句判断的
+                 * 如果当前剩余许可数量为不小于0，则将状态修改为目标值，然后返回当前许可数量
+                 */
+                if (remaining < 0 || /*如果此判断为true，则不会进行到下一句*/
                         compareAndSetState(available, remaining))
                     return remaining;
             }
@@ -249,6 +272,7 @@ public class Semaphore implements java.io.Serializable {
      * @param fair {@code true} if this semaphore will guarantee
      *        first-in first-out granting of permits under contention,
      *        else {@code false}
+     *        true表示公平锁，FALSE表示非公平锁
      */
     public Semaphore(int permits, boolean fair) {
         sync = fair ? new Semaphore.FairSync(permits) : new Semaphore.NonfairSync(permits);
@@ -585,10 +609,10 @@ public class Semaphore implements java.io.Serializable {
 
     /**
      * Returns the current number of permits available in this semaphore.
-     *
      * <p>This method is typically used for debugging and testing purposes.
      *
      * @return the number of permits available in this semaphore
+     * -返回当前信号量中可以获取的许可数量,此方法经常用来debug或者测试时使用
      */
     public int availablePermits() {
         return sync.getPermits();

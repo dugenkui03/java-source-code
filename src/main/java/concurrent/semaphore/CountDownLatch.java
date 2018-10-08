@@ -155,7 +155,7 @@ public class CountDownLatch {
         }
 
         /**
-         * 当前状态是否为0，即已经可以执行后继程序，是则1，否则-1。
+         * 当前状态是否为0，即可以执行 后继程序(可能通过await()挂起的程序)，是则1，否则-1。
          */
         @Override
         protected int tryAcquireShared(int acquires) {
