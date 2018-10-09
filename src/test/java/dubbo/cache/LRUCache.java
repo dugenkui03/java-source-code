@@ -63,6 +63,11 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
     public V get(Object key) {
         readLock.lock();
         try {
+            try {
+                TimeUnit.MILLISECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return super.get(key);
         } finally {
             readLock.unlock();

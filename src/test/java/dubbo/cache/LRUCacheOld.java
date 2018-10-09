@@ -17,6 +17,7 @@ package dubbo.cache;
  */
 
 import java.util.LinkedHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -58,6 +59,11 @@ public class LRUCacheOld<K, V> extends LinkedHashMap<K, V> {
     public V get(Object key) {
         lock.lock();
         try {
+            try {
+                TimeUnit.MILLISECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return super.get(key);
         } finally {
             lock.unlock();
