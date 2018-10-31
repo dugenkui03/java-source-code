@@ -54,6 +54,9 @@ public class AltHashing {
             k1 &= 0xFFFFFFFFL;
 
             h1 ^= k1;
+            /**
+             * return (i << distance) | (i >>> -distance);
+             */
             h1 = Integer.rotateLeft((int)h1, 13);
             h1 = h1 * 5 + 0xe6546b64;
             h1 &= 0xFFFFFFFFL;
