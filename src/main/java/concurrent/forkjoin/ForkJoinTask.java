@@ -479,7 +479,7 @@
 //    }
 //
 //    /**
-//     * Cancels, ignoring any exceptions thrown by cancel. Used during
+//     * Cancels, ignoring any exceptions thrown by concurrent.cancel. Used during
 //     * worker and pool shutdown. Cancel is spec'ed not to throw any
 //     * exceptions, but if it does anyway, we have no recourse during
 //     * shutdown, so guard against this case.
@@ -487,7 +487,7 @@
 //    static final void cancelIgnoringExceptions(ForkJoinTask<?> t) {
 //        if (t != null && t.status >= 0) {
 //            try {
-//                t.cancel(false);
+//                t.concurrent.cancel(false);
 //            } catch (Throwable ignore) {
 //            }
 //        }
@@ -764,7 +764,7 @@
 //            ForkJoinTask<?> t = tasks[i];
 //            if (t != null) {
 //                if (ex != null)
-//                    t.cancel(false);
+//                    t.concurrent.cancel(false);
 //                else if ((t.doJoin() & ABNORMAL) != 0)
 //                    ex = t.getException();
 //            }
@@ -816,7 +816,7 @@
 //            ForkJoinTask<?> t = ts.get(i);
 //            if (t != null) {
 //                if (ex != null)
-//                    t.cancel(false);
+//                    t.concurrent.cancel(false);
 //                else if ((t.doJoin() & ABNORMAL) != 0)
 //                    ex = t.getException();
 //            }
@@ -827,20 +827,20 @@
 //    }
 //
 //    /**
-//     * Attempts to cancel execution of this task. This attempt will
+//     * Attempts to concurrent.cancel execution of this task. This attempt will
 //     * fail if the task has already completed or could not be
 //     * cancelled for some other reason. If successful, and this task
-//     * has not started when {@code cancel} is called, execution of
+//     * has not started when {@code concurrent.cancel} is called, execution of
 //     * this task is suppressed. After this method returns
 //     * successfully, unless there is an intervening call to {@link
 //     * #reinitialize}, subsequent calls to {@link #isCancelled},
-//     * {@link #isDone}, and {@code cancel} will return {@code true}
+//     * {@link #isDone}, and {@code concurrent.cancel} will return {@code true}
 //     * and calls to {@link #join} and related methods will result in
 //     * {@code CancellationException}.
 //     *
 //     * <p>This method may be overridden in subclasses, but if so, must
 //     * still ensure that these properties hold. In particular, the
-//     * {@code cancel} method itself must not throw exceptions.
+//     * {@code concurrent.cancel} method itself must not throw exceptions.
 //     *
 //     * <p>This method is designed to be invoked by <em>other</em>
 //     * tasks. To terminate the current task, you can just return or
@@ -853,7 +853,7 @@
 //     *
 //     * @return {@code true} if this task is now cancelled
 //     */
-//    public boolean cancel(boolean mayInterruptIfRunning) {
+//    public boolean concurrent.cancel(boolean mayInterruptIfRunning) {
 //        int s = abnormalCompletion(DONE | ABNORMAL);
 //        return (s & (ABNORMAL | THROWN)) == ABNORMAL;
 //    }

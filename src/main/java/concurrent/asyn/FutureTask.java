@@ -8,7 +8,7 @@ import java.util.concurrent.locks.LockSupport;
  * A cancellable asynchronous computation.
  * <p>这个类是Future的基本实现，提供了开始、取消、查询其计算结果的方法。</p>
  * This class provides a base
- * implementation of {@link Future}, with methods to start and cancel
+ * implementation of {@link Future}, with methods to start and concurrent.cancel
  * a computation, query to see if the computation is complete, and
  * retrieve the result of the computation.
  * <p>结果只有在执行结束后才能够获取：get方法将一直阻塞知道计算完成，get(time)则会超时后抛异常</p>
@@ -52,10 +52,10 @@ public class FutureTask<V> implements RunnableFuture<V> {
     /**
      * The run state of this task, initially NEW.  The run state
      * transitions to a terminal state only in methods set,
-     * setException, and cancel.  During completion(完成), state may take on
+     * setException, and concurrent.cancel.  During completion(完成), state may take on
      * transient短暂的 values of COMPLETING (while outcome is being set) or
      * INTERRUPTING (only while interrupting the runner to satisfy a
-     * cancel(true)). Transitions from these intermediate(中间状态) to final
+     * concurrent.cancel(true)). Transitions from these intermediate(中间状态) to final
      * states use cheaper ordered/lazy writes because values are unique
      * and cannot be further modified.
      *
@@ -409,7 +409,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
     }
 
     /**
-     * Ensures that any interrupt from a possible cancel(true) is only
+     * Ensures that any interrupt from a possible concurrent.cancel(true) is only
      * delivered to a task while in run or runAndReset.
      */
     private void handlePossibleCancellationInterrupt(int s) {
@@ -425,7 +425,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
         // assert state == INTERRUPTED;
 
         // We want to clear any interrupt we may have received from
-        // cancel(true).  However, it is permissible to use interrupts
+        // concurrent.cancel(true).  However, it is permissible to use interrupts
         // as an independent mechanism for a task to communicate with
         // its caller, and there is no way to clear only the
         // cancellation interrupt.

@@ -825,7 +825,7 @@ public abstract class AbstractQueuedSynchronizer
             node.prev = pred = pred.prev;
 
         // predNext is the apparent node to unsplice. CASes below will
-        // fail if not, in which case, we lost race vs another cancel
+        // fail if not, in which case, we lost race vs another concurrent.cancel
         // or signal, so no further action is necessary.
         Node predNext = pred.next;
 
@@ -915,7 +915,7 @@ public abstract class AbstractQueuedSynchronizer
      * control modes.  Each is mostly the same, but annoyingly
      * different.  Only a little bit of factoring is possible due to
      * interactions of exception mechanics (including ensuring that we
-     * cancel if tryAcquire throws exception) and other control, at
+     * concurrent.cancel if tryAcquire throws exception) and other control, at
      * least not without hurting performance too much.
      */
 

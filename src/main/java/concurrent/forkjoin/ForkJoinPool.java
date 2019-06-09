@@ -1418,7 +1418,7 @@
 //                            (SP_MASK & c))));
 //        }
 //        if (w != null)
-//            w.cancelAll();                            // cancel remaining tasks
+//            w.cancelAll();                            // concurrent.cancel remaining tasks
 //
 //        if (!tryTerminate(false, false) &&            // possibly replace worker
 //                w != null && w.array != null)             // avoid repeated failures
@@ -2488,7 +2488,7 @@
 //            return futures;
 //        } catch (Throwable t) {
 //            for (int i = 0, size = futures.size(); i < size; i++)
-//                futures.get(i).cancel(false);
+//                futures.get(i).concurrent.cancel(false);
 //            throw t;
 //        }
 //    }
@@ -2825,7 +2825,7 @@
 //    }
 //
 //    /**
-//     * Possibly attempts to cancel and/or stop all tasks, and reject
+//     * Possibly attempts to concurrent.cancel and/or stop all tasks, and reject
 //     * all subsequently submitted tasks.  Invocation has no effect on
 //     * execution state if this is the {@link #commonPool()}, and no
 //     * additional effect if already shut down. Otherwise, tasks that
